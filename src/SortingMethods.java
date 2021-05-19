@@ -24,21 +24,21 @@ public class SortingMethods {
     }
 
     private static void insertionSort(Record[] records) {
-        int n = records.length;
-        for (int i=1; i<n; i++){
+        for (int i=1; i<records.length; i++){
+            Record currRecord = records[i];
             int key = records[i].getChol();
             int j=i-1;
             while (j >= 0 && records[j].getChol() > key){
                 records[j+1] = records[j];
                 j = j-1;
             }
-            records[j+1] = records[i];
+            records[j+1] = currRecord;
         }
     }
 
     private static void mergeSort(Record[] records, int start, int end) {
         int mid = (start+end)/2;
-        if (end - start <2){
+        if (end - start < 2){
             return;
         }
         mergeSort(records, start, mid);

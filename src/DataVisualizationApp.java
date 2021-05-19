@@ -30,7 +30,7 @@ public class DataVisualizationApp extends PApplet {
 
     public void keyPressed(){
         if (key == 'e'){
-            foundAt = dataset.find(233);
+            foundAt = dataset.find(236);
             System.out.println(foundAt);
         } else if (key == 'o'){
             dataset.sort();
