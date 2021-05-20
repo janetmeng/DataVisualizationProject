@@ -5,8 +5,8 @@ public class SortingMethods {
 
     public static void sort(Record[] records){
         //SortingMethods.selectionSort(records);
-        SortingMethods.insertionSort(records);
-        //SortingMethods.mergeSort(records, 0, records.length-1);
+        //SortingMethods.insertionSort(records);
+        SortingMethods.mergeSort(records, 0, records.length-1);
     }
 
     private static void selectionSort(Record[] records) {
@@ -37,12 +37,12 @@ public class SortingMethods {
     }
 
     private static void mergeSort(Record[] records, int start, int end) {
-        int mid = (start+end)/2;
-        if (end - start < 2){
+        if (end<=start){
             return;
         }
+        int mid = (start+end)/2;
         mergeSort(records, start, mid);
-        mergeSort(records, mid, end);
+        mergeSort(records, mid+1, end);
         merge(records, start, mid, end);
     }
 

@@ -24,7 +24,7 @@ public class DataVisualizationApp extends PApplet {
     }
 
     public void draw(){
-        background(255);
+        background(174, 232, 253); //255
         displayRecords();
     }
 
@@ -60,7 +60,7 @@ public class DataVisualizationApp extends PApplet {
             if (foundAt == i){
                 fill(255, 0, 0);
             }
-            text(record.getNumber(), 50, y);
+            text(record.getNumber(), 100, y);
 
             fill(0);
             text(record.getAge(), 200, y);
