@@ -5,8 +5,8 @@ public class SortingMethods {
 
     public static void sort(Record[] records){
         //SortingMethods.selectionSort(records);
-        //SortingMethods.insertionSort(records);
-        SortingMethods.mergeSort(records, 0, records.length-1);
+        SortingMethods.insertionSort(records);
+        //SortingMethods.mergeSort(records, 0, records.length-1);
     }
 
     private static void selectionSort(Record[] records) {
@@ -23,7 +23,7 @@ public class SortingMethods {
         }
     }
 
-    private static void insertionSort(Record[] records) {
+    private static void insertionSort(Record[] records) { //199 and 263
         for (int i=1; i<records.length; i++){
             Record currRecord = records[i];
             int key = records[i].getChol();
