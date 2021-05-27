@@ -9,9 +9,9 @@ public class DataVisualizationApp extends PApplet {
     int minMHR;
     int maxChol;
     int maxMHR;
-    float[] regCholArr = new float[19];
-    float[] regMHRArr = new float[19];
-    int[] regAgeArr = new int[19];
+    float[] regCholArr = new float[25];
+    float[] regMHRArr = new float[25];
+    int[] regAgeArr = new int[25];
 
     public static void main(String[] args){
         app = new DataVisualizationApp();
@@ -36,10 +36,10 @@ public class DataVisualizationApp extends PApplet {
         maxChol = getMax(records);
         maxMHR = getMaxMHR(records);
 
-        for (int i=0; i<19; i++) {
-            int regChol = (int) (Math.random()*76 + 125);
-            int regMHR = (int) (Math.random() * 36 + 150);
-            int regAge = (int) (Math.random() * 36 + 35);
+        for (int i=0; i<25; i++) {
+            int regChol = (int) (Math.random() * 76) + 125;
+            int regMHR = (int) (Math.random() * 36) + 150;
+            int regAge = (int) (Math.random() * 36) + 35;
             float newRegX = map(regChol, 125, maxChol, 0, width);
 
             regCholArr[i] = newRegX;
@@ -52,6 +52,7 @@ public class DataVisualizationApp extends PApplet {
     public void draw(){
         background(255);
         displayRecords();
+        strokeWeight(3);
         text("What cholesterol are you searching for? " + searched, 1150, 200);
     }
 
@@ -68,7 +69,6 @@ public class DataVisualizationApp extends PApplet {
             }
         } else if (key == 'a') { //animation, sorting by age display
             animation();
-            int startSeconds = second();
         }
     }
 
@@ -83,9 +83,7 @@ public class DataVisualizationApp extends PApplet {
         for (int i=0; i<records.length; i++){
             // people with heart disease's data visualization
             int chol = records[i].getChol();
-            // the map function takes our value and maps it to a value that fits on our canvas
-            float newX = map(chol, minChol, maxChol, 0, width);
-
+            float newX = map(chol, minChol, maxChol, 0, width); // the map function takes our value and maps it to a value that fits on our canvas
             int maxHeartRate = records[i].getMaxHeartRate();
             float newY = map(maxHeartRate, minMHR, maxMHR, 0, height);
 
@@ -96,6 +94,11 @@ public class DataVisualizationApp extends PApplet {
                 strokeWeight(0);
                 stroke(0); //black
             }
+
+            //exercise induced angina
+            if (records[i].getExang() == 1){
+                strokeWeight(5);
+            }
             smooth();
             // determines color & hue of heart
             if (records[i].getSex() == 1) { //male
@@ -104,7 +107,9 @@ public class DataVisualizationApp extends PApplet {
                 } else if (records[i].getThal() == 1){
                     fill(133, 235, 255, 100);
                 } else if (records[i].getThal() == 2){
-                    fill(133, 235, 255, 200);
+                    fill(133, 235, 255, 175);
+                } else if (records[i].getThal() == 3){
+                    fill(133, 235, 255, 250);
                 }
             } else{ //female
                 if(records[i].getThal() == 0){
@@ -112,7 +117,9 @@ public class DataVisualizationApp extends PApplet {
                 }else if (records[i].getThal() == 1){
                     fill(255, 153, 204, 100);
                 } else if (records[i].getThal() == 2){
-                    fill(255, 153, 204, 200);
+                    fill(255, 153, 204, 175);
+                } else if (records[i].getThal() == 3){
+                    fill(255, 153, 204, 250);
                 }
             }
             int age = records[i].getAge();
@@ -143,12 +150,20 @@ public class DataVisualizationApp extends PApplet {
 
         // regular people's data visualization
         for (int i=0; i<regCholArr.length; i++) {
-            if (i % 2 == 0) {
+            if (i % 2 == 0) { //female
                 fill(255, 153, 204);
+                double regExang = (int) (Math.random()*100.0); //check for exang
+                if (regExang<=6.7){
+                    strokeWeight(5);
+                }
             } else {
                 fill(133, 235, 255); //male
+                double regExang = (int) (Math.random()*100.0); //check for exang
+                if (regExang<=5.7){
+                    strokeWeight(5);
+                }
             }
-            ellipse(regCholArr[i], regMHRArr[i], regAgeArr[i] / 2, regAgeArr[i] / 2);
+            ellipse(regCholArr[i], regMHRArr[i], regAgeArr[i], regAgeArr[i]);
         }
     }
 
