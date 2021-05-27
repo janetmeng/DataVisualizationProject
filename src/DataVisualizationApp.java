@@ -5,13 +5,14 @@ public class DataVisualizationApp extends PApplet {
     private Dataset dataset;
     private int foundAt;
     private String searched = "";
-    int minChol;
-    int minMHR;
-    int maxChol;
-    int maxMHR;
-    float[] regCholArr = new float[25];
-    float[] regMHRArr = new float[25];
-    int[] regAgeArr = new int[25];
+    private int minChol;
+    private int minMHR;
+    private int maxChol;
+    private int maxMHR;
+    private float[] regCholArr = new float[25];
+    private float[] regMHRArr = new float[25];
+    private int[] regAgeArr = new int[25];
+    private boolean animationMode = false;
 
     public static void main(String[] args){
         app = new DataVisualizationApp();
@@ -19,7 +20,9 @@ public class DataVisualizationApp extends PApplet {
     }
 
     public DataVisualizationApp(){
-        foundAt = -1;
+        foundAt = -1;//initialize the othter instance vars here
+
+        animationMode = false;
     }
 
     public void settings(){
@@ -51,9 +54,14 @@ public class DataVisualizationApp extends PApplet {
 
     public void draw(){
         background(255);
-        displayRecords();
         strokeWeight(3);
         text("What cholesterol are you searching for? " + searched, 1150, 200);
+        if (animationMode){
+            animation();
+        } else{
+            displayRecords();
+        }
+
     }
 
     public void keyPressed(){
@@ -68,7 +76,7 @@ public class DataVisualizationApp extends PApplet {
                 searched = searched.substring(0, searched.length() - 1);
             }
         } else if (key == 'a') { //animation, sorting by age display
-            animation();
+            animationMode = true;
         }
     }
 
@@ -152,7 +160,7 @@ public class DataVisualizationApp extends PApplet {
         for (int i=0; i<regCholArr.length; i++) {
             if (i % 2 == 0) { //female
                 fill(255, 153, 204);
-                double regExang = (int) (Math.random()*100.0); //check for exang
+                double regExang = (int) (Math.random()*100.0); //check for exang --------------------- QUESTION: why all bolded?
                 if (regExang<=6.7){
                     strokeWeight(5);
                 }
@@ -168,7 +176,6 @@ public class DataVisualizationApp extends PApplet {
     }
 
     public void animation(){
-        dataset.sort();
         Record[] records = dataset.getRecords();
         boolean visible_lowest = true;
         boolean visible_middle = false;
@@ -182,28 +189,27 @@ public class DataVisualizationApp extends PApplet {
                     s = second();
                 }
 
-                if (i < 6 && visible_lowest) {
+                if (records[i].getAge() > 35 && records[i].getAge() < 46 && visible_lowest) {
                     displaySingleRecord(records[i]);
-                    if (i==5){
-                        visible_lowest = false;
-                        visible_middle = true;
-                    }
+                    //when five seconds have passed
+                    visible_lowest = false;
+                    visible_middle = true;
                 }
-                if (i < 11 && visible_middle) {
+
+                if (records[i].getAge() > 46 && records[i].getAge() < 56 && visible_middle) {
                     displaySingleRecord(records[i]);
-                    if (i==10){
-                        visible_middle = false;
-                        visible_highest = true;
-                    }
+                    //when five seconds have passed
+                    visible_middle = false;
+                    visible_highest = true;
                 }
-                if (i < 16 && visible_highest) {
+                if (records[i].getAge() < records.length && visible_highest) {
                     displaySingleRecord(records[i]);
-                    if (i==15){
-                        visible_highest = false;
-                        visible_lowest = true;
-                    }
+                    //when five seconds have passed
+                    visible_highest = false;
+                    visible_lowest = true;
                 }
             }
+            j++;
         }
     }
 
