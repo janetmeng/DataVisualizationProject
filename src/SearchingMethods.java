@@ -4,12 +4,12 @@ public class SearchingMethods {
     }
 
     public static int search(Record[] records, int cholesterol){
-        //return SearchingMethods.linearSearch(records, cholesterol);
-        return SearchingMethods.binarySearch(records, 0, records.length-1, cholesterol);
+        return SearchingMethods.linearSearch(records, cholesterol, 0);
+        //return SearchingMethods.binarySearch(records, 0, records.length-1, cholesterol);
     }
 
-    private static int linearSearch(Record[] records, int cholesterol){
-        for (int i=0; i<records.length; i++) {
+    private static int linearSearch(Record[] records, int cholesterol, int startingPoint){
+        for (int i=startingPoint; i<records.length; i++) {
             if (records[i].getChol() == cholesterol) {
                 return i;
             }

@@ -8,6 +8,9 @@ public class Record {
     private int thal;
     private int target;
 
+    public Record(){
+    }
+
     public Record(int number, int age, int sex, int chol, int maxHeartRate, int exang, int thal, int target){
         this.number = number;
         this.age = age;
@@ -18,6 +21,7 @@ public class Record {
         this.thal = thal;
         this.target = target;
     }
+
     public int getNumber(){
         return number;
     }
@@ -48,5 +52,16 @@ public class Record {
 
     public int getTarget() {
         return target;
+    }
+
+    public void setRecord(int number, int age, int sex, int chol, int maxHeartRate, int exang, int thal, int target){
+        this.number = number;
+        this.age = age;
+        this.sex = sex;
+        this.chol = chol;
+        this.maxHeartRate = maxHeartRate;
+        this.exang = exang;
+        this.thal = thal;
+        this.target = target;
     }
 }

@@ -5,14 +5,12 @@ public class DataVisualizationApp extends PApplet {
     private Dataset dataset;
     private int foundAt;
     private String searched = "";
+    private boolean animationMode;
+    private int counter;
     private int minChol;
     private int minMHR;
     private int maxChol;
     private int maxMHR;
-    private float[] regCholArr = new float[25];
-    private float[] regMHRArr = new float[25];
-    private int[] regAgeArr = new int[25];
-    private boolean animationMode = false;
 
     public static void main(String[] args){
         app = new DataVisualizationApp();
@@ -20,9 +18,9 @@ public class DataVisualizationApp extends PApplet {
     }
 
     public DataVisualizationApp(){
-        foundAt = -1;//initialize the othter instance vars here
-
+        foundAt = -1;
         animationMode = false;
+        counter = 0;
     }
 
     public void settings(){
@@ -32,36 +30,22 @@ public class DataVisualizationApp extends PApplet {
     public void setup(){
         dataset = new Dataset();
         fill(0);
-
         Record[] records = dataset.getRecords();
         minChol = getMin(records);
         minMHR = getMinMHR(records);
         maxChol = getMax(records);
         maxMHR = getMaxMHR(records);
-
-        for (int i=0; i<25; i++) {
-            int regChol = (int) (Math.random() * 76) + 125;
-            int regMHR = (int) (Math.random() * 36) + 150;
-            int regAge = (int) (Math.random() * 36) + 35;
-            float newRegX = map(regChol, 125, maxChol, 0, width);
-
-            regCholArr[i] = newRegX;
-            float newRegY = map(regMHR, 150, maxMHR, 0, height);
-            regMHRArr[i] = newRegY;
-            regAgeArr[i] = regAge;
-        }
     }
 
     public void draw(){
         background(255);
-        strokeWeight(3);
+        strokeWeight(0);
         text("What cholesterol are you searching for? " + searched, 1150, 200);
         if (animationMode){
             animation();
         } else{
             displayRecords();
         }
-
     }
 
     public void keyPressed(){
@@ -75,7 +59,7 @@ public class DataVisualizationApp extends PApplet {
             if(searched.length() > 0) {
                 searched = searched.substring(0, searched.length() - 1);
             }
-        } else if (key == 'a') { //animation, sorting by age display
+        } else if (key == 'a') {
             animationMode = true;
         }
     }
@@ -100,12 +84,12 @@ public class DataVisualizationApp extends PApplet {
                 stroke(255,255,0); //yellow
             } else{
                 strokeWeight(0);
-                stroke(0); //black
+                stroke(0);
             }
 
             //exercise induced angina
             if (records[i].getExang() == 1){
-                strokeWeight(5);
+                strokeWeight(3);
             }
             smooth();
             // determines color & hue of heart
@@ -147,6 +131,8 @@ public class DataVisualizationApp extends PApplet {
             //end of drawing heart
             text(records[i].getChol(),0,0);
             popMatrix();
+            strokeWeight(0);
+            stroke(0);
 
             // Here we put a name label on the plotted data when the mouse is over it
             //if(dist(mouseX,mouseY,newX,newY)<10 && !labelDrawn){
@@ -157,7 +143,7 @@ public class DataVisualizationApp extends PApplet {
         }
 
         // regular people's data visualization
-        for (int i=0; i<regCholArr.length; i++) {
+        for (int i=records.length - 25; i<records.length; i++) {
             if (i % 2 == 0) { //female
                 fill(255, 153, 204);
                 double regExang = (int) (Math.random()*100.0); //check for exang --------------------- QUESTION: why all bolded?
@@ -171,45 +157,41 @@ public class DataVisualizationApp extends PApplet {
                     strokeWeight(5);
                 }
             }
-            ellipse(regCholArr[i], regMHRArr[i], regAgeArr[i], regAgeArr[i]);
+            ellipse(records[i].getChol(), records[i].getMaxHeartRate(), records[i].getAge(), records[i].getAge());
+            strokeWeight(0);
+            stroke(0);
         }
     }
 
     public void animation(){
         Record[] records = dataset.getRecords();
-        boolean visible_lowest = true;
-        boolean visible_middle = false;
-        boolean visible_highest = false;
-        int j=0;
 
-        while (j<2) {
+        if(counter > 0) {
             for (int i = 0; i < records.length; i++) {
-                int s = second();
-                while (s % 5 != 0) {
-                    s = second();
-                }
-
-                if (records[i].getAge() > 35 && records[i].getAge() < 46 && visible_lowest) {
+                if (records[i].getAge() > 35 && records[i].getAge() < 46) {
                     displaySingleRecord(records[i]);
-                    //when five seconds have passed
-                    visible_lowest = false;
-                    visible_middle = true;
-                }
-
-                if (records[i].getAge() > 46 && records[i].getAge() < 56 && visible_middle) {
-                    displaySingleRecord(records[i]);
-                    //when five seconds have passed
-                    visible_middle = false;
-                    visible_highest = true;
-                }
-                if (records[i].getAge() < records.length && visible_highest) {
-                    displaySingleRecord(records[i]);
-                    //when five seconds have passed
-                    visible_highest = false;
-                    visible_lowest = true;
                 }
             }
-            j++;
+        }
+        if (counter > 200) {
+            for (int i = 0; i < records.length; i++) {
+                // now s is a multiple of 10
+                if (records[i].getAge() > 46 && records[i].getAge() < 56) {
+                    displaySingleRecord(records[i]);
+                }
+            }
+        }
+        if (counter > 400) {
+            for (int i = 0; i < records.length; i++) {
+                // now s is a multiple of 10
+                if (records[i].getAge() > 56 && records[i].getAge() < 71) {
+                    displaySingleRecord(records[i]);
+                }
+            }
+        }
+        counter++;
+        if (counter>600){
+            animationMode = false;
         }
     }
 
@@ -258,6 +240,9 @@ public class DataVisualizationApp extends PApplet {
         endShape();
         //end of drawing heart
         popMatrix();
+        //reset stroke and strokeWeight
+        strokeWeight(0);
+        stroke(0);
     }
 
     public int getMin(Record[] records){
@@ -270,7 +255,7 @@ public class DataVisualizationApp extends PApplet {
         return min;
     }
 
-    public int getMax(Record[] records){
+    public int getMax(Record[] records){ //gets maxChol of records
         int max = Integer.MIN_VALUE;
         for (int i=0; i<records.length; i++){
             if (records[i].getChol()>max){

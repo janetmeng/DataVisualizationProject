@@ -7,8 +7,8 @@ public class Dataset implements Searchable, Sortable {
     public Dataset() {
         DataVisualizationApp app = DataVisualizationApp.getApp();
         Table table = app.loadTable("data/heart_2.csv", "header");
-        records = new Record[table.getRowCount()];
-        for (int i = 0; i < records.length; i++) {
+        records = new Record[table.getRowCount() + 25];
+        for (int i = 0; i < records.length - 25; i++) {
             TableRow row = table.getRow(i);
             int number = row.getInt("number");
             int age = row.getInt("age");
@@ -19,6 +19,8 @@ public class Dataset implements Searchable, Sortable {
             int thal = row.getInt("thal");
             int target = row.getInt("target");
             records[i] = new Record(number, age, sex, chol, maxHeartRate, exang, thal, target);
+        } for (int i=records.length-25; i<records.length; i++){
+            records[i] = new NormalRecord();
         }
     }
 
