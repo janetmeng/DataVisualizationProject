@@ -30,17 +30,25 @@ public class DataVisualizationApp extends PApplet {
     public void setup(){
         dataset = new Dataset();
         Record[] records = dataset.getRecords();
-        minChol = getMin(records);
+        NormalRecord[] normalRecords = dataset.getNormalRecords();
+        minChol = getMin(normalRecords);
         minMHR = getMinMHR(records);
         maxChol = getMax(records);
-        maxMHR = getMaxMHR(records);
+        maxMHR = getMaxMHR(normalRecords);
     }
 
     public void draw(){
         background(255);
         strokeWeight(0);
         fill(0);
-        text("What cholesterol are you searching for within the people with heart disease? " + searched, 1000, 200);
+        text("Key for this scatter plot: x-axis represents cholesterol level (labeled next to each point as well), y-axis represents maximum heart rate, size of the point represents age, color represents sex,", 150, 100);
+        text("boldface represents whether exercise induced angina is present, transparency level represents history of thalassemia (opaque means normal, more transparent means more severe history),", 150, 120);
+        text("shape represents whether the patient has heart disease or not. Note that the data for patients without heart disease is randomly generated from the appropriate percentages and ranges.", 150, 140);
+
+        fill(255,0,0);
+        text("What cholesterol are you searching for within the people with heart disease? Type in your number: [" + searched + "] Click 'e' to search after entering your number and 'd' to delete your input and try another number.", 150, 180);
+        text("Click 'o' to sort. Nothing should change since it is already sorted on the scatter plot.", 150, 200);
+        text("Click 'a' to see an animated display of the data based on age. The first slide will show the information for patients ages 35-46, the second slide for ages 47-58, and the last slide for ages 59-70.", 150, 220);
         if (animationMode){
             animation();
         } else{
@@ -53,6 +61,7 @@ public class DataVisualizationApp extends PApplet {
             foundAt = dataset.find(Integer.parseInt(searched), foundAt+1);
         } else if (key == 'o'){ //sort
             dataset.sort();
+            //System.out.println("Cholesterol: " + chol + ", Max Heart Rate: " + maxHeartRate);
         } else if (key == '1' || key == '2' || key == '3' || key == '4' || key == '5' || key == '6' || key == '7' || key == '8' || key == '9' || key == '0'){
             searched = searched + key;
         } else if (key == 'd'){
@@ -139,7 +148,7 @@ public class DataVisualizationApp extends PApplet {
             strokeWeight(normalRecords[i].getStrokeWeight());
             int chol = normalRecords[i].getChol();
             float newX = map(chol, minChol, maxChol, 0, width); // the map function takes our value and maps it to a value that fits on our canvas
-            int maxHeartRate = records[i].getMaxHeartRate();
+            int maxHeartRate = normalRecords[i].getMaxHeartRate();
             float newY = map(maxHeartRate, minMHR, maxMHR, 0, height);
             if (normalRecords[i].getSex() == 0){
                 if(normalRecords[i].getThal() == 0){
@@ -173,29 +182,29 @@ public class DataVisualizationApp extends PApplet {
         Record[] records = dataset.getRecords();
         if(counter > 0) {
             for (int i = 0; i < records.length; i++) {
-                if (records[i].getAge() > 35 && records[i].getAge() < 46) {
+                if (records[i].getAge() > 35 && records[i].getAge() < 47) { //35 - 46
                     displaySingleRecord(records[i]);
                 }
             }
         }
-        if (counter > 200) {
+        if (counter > 150) {
             for (int i = 0; i < records.length; i++) {
                 // now s is a multiple of 10
-                if (records[i].getAge() > 46 && records[i].getAge() < 56) {
+                if (records[i].getAge() >= 47 && records[i].getAge() < 59) { //47 - 58
                     displaySingleRecord(records[i]);
                 }
             }
         }
-        if (counter > 400) {
+        if (counter > 300) {
             for (int i = 0; i < records.length; i++) {
                 // now s is a multiple of 10
-                if (records[i].getAge() > 56 && records[i].getAge() < 71) {
+                if (records[i].getAge() >= 59 && records[i].getAge() < 71) { //59 - 70
                     displaySingleRecord(records[i]);
                 }
             }
         }
         counter++;
-        if (counter>600){
+        if (counter>450){
             animationMode = false;
         }
     }

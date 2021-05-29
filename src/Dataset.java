@@ -34,6 +34,7 @@ public class Dataset implements Searchable, Sortable {
     public NormalRecord[] getNormalRecords() {
         return normalRecords;
     }
+
     @Override
     public void sort() {
         SortingMethods.sort(records);

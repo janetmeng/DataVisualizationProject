@@ -3,10 +3,10 @@ public class NormalRecord extends Record{
 
     public NormalRecord(int number){
         super();
-        int age = (int) (Math.random() * 36) + 35;
+        int age = (int) (Math.random() * 36) + 35; //35 - 70
         int sex = (int) (Math.random() * 2);
         int chol = (int) (Math.random() * 76) + 125;
-        int maxHeartRate = (int) (Math.random() * 36) + 150;
+        int maxHeartRate = (int) (Math.random() * 41) + 150; //150-190
         int exang = (int) (Math.random()*100.0);
         if (sex == 0) {
             if (exang <= 6.7) {
