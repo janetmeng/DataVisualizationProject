@@ -1,3 +1,3 @@
 interface Searchable {
-    public int find(int key);
+    public int find(int key, int startingPoint);
 }

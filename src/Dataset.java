@@ -3,12 +3,13 @@ import processing.data.TableRow;
 
 public class Dataset implements Searchable, Sortable {
     private final Record[] records;
+    private final NormalRecord[] normalRecords;
 
     public Dataset() {
         DataVisualizationApp app = DataVisualizationApp.getApp();
         Table table = app.loadTable("data/heart_2.csv", "header");
-        records = new Record[table.getRowCount() + 25];
-        for (int i = 0; i < records.length - 25; i++) {
+        records = new Record[table.getRowCount()];
+        for (int i = 0; i < records.length; i++) {
             TableRow row = table.getRow(i);
             int number = row.getInt("number");
             int age = row.getInt("age");
@@ -19,8 +20,10 @@ public class Dataset implements Searchable, Sortable {
             int thal = row.getInt("thal");
             int target = row.getInt("target");
             records[i] = new Record(number, age, sex, chol, maxHeartRate, exang, thal, target);
-        } for (int i=records.length-25; i<records.length; i++){
-            records[i] = new NormalRecord();
+        }
+        normalRecords = new NormalRecord[10];
+        for (int i=0; i<normalRecords.length; i++){
+            normalRecords[i] = new NormalRecord(i);
         }
     }
 
@@ -28,13 +31,16 @@ public class Dataset implements Searchable, Sortable {
         return records;
     }
 
+    public NormalRecord[] getNormalRecords() {
+        return normalRecords;
+    }
     @Override
     public void sort() {
         SortingMethods.sort(records);
     }
 
     @Override
-    public int find(int cholesterol) {
-        return SearchingMethods.search(records, cholesterol);
+    public int find(int cholesterol, int startingPoint) {
+        return SearchingMethods.search(records, cholesterol, startingPoint);
     }
 }

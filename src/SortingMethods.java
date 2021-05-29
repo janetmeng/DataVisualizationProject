@@ -4,8 +4,8 @@ public class SortingMethods {
     }
 
     public static void sort(Record[] records){
-        //SortingMethods.selectionSort(records);
-        SortingMethods.insertionSort(records);
+        SortingMethods.selectionSort(records);
+        //SortingMethods.insertionSort(records);
         //SortingMethods.mergeSort(records, 0, records.length-1);
     }
 
@@ -23,7 +23,7 @@ public class SortingMethods {
         }
     }
 
-    private static void insertionSort(Record[] records) { //199 and 263
+    private static void insertionSort(Record[] records) {
         for (int i=1; i<records.length; i++){
             Record currRecord = records[i];
             int key = records[i].getChol();
@@ -76,7 +76,6 @@ public class SortingMethods {
                 records[i] = rightArray[rightIndex];
                 rightIndex++;
             }
-
         }
     }
 }

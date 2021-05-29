@@ -1,36 +1,29 @@
 public class NormalRecord extends Record{
-    private int regNumber;
-    private int regAge;
-    private int regSex;
-    private int regChol;
-    private int regMHR;
-    private int regExang;
-    private int regThal;
-    private int regTarget;
     private int strokeWeight;
 
-    public NormalRecord(){
+    public NormalRecord(int number){
         super();
-        regNumber = 25;
-        regAge = (int) (Math.random() * 36) + 35;
-        regSex = (int) (Math.random() * 2);
-        regChol = (int) (Math.random() * 76) + 125;
-        regMHR = (int) (Math.random() * 36) + 150;
-        regExang = (int) (Math.random()*100.0);
-        if (regSex == 0) {
-            if (regExang <= 6.7) {
-                strokeWeight = 5;
+        int age = (int) (Math.random() * 36) + 35;
+        int sex = (int) (Math.random() * 2);
+        int chol = (int) (Math.random() * 76) + 125;
+        int maxHeartRate = (int) (Math.random() * 36) + 150;
+        int exang = (int) (Math.random()*100.0);
+        if (sex == 0) {
+            if (exang <= 6.7) {
+                strokeWeight = 3;
             }
         } else {
-            if (regExang <= 5.7){
-                strokeWeight = 5;
+            if (exang <= 5.7){
+                strokeWeight = 3;
             }
         }
-        regThal = 0;
-        regTarget = 0;
+        int thal = 0;
+        int target = 0;
+        setRecord(number, age, sex, chol, maxHeartRate, exang, thal, target); // pass in ^^ those generated numbers
+    }
 
-        setRecord(regNumber, regAge, regSex, regChol, regMHR, regExang, regThal, regTarget); // pass in ^^ those generated numbers
-
+    public int getStrokeWeight(){
+        return strokeWeight;
     }
 
 }

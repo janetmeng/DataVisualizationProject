@@ -29,7 +29,6 @@ public class DataVisualizationApp extends PApplet {
 
     public void setup(){
         dataset = new Dataset();
-        fill(0);
         Record[] records = dataset.getRecords();
         minChol = getMin(records);
         minMHR = getMinMHR(records);
@@ -40,7 +39,8 @@ public class DataVisualizationApp extends PApplet {
     public void draw(){
         background(255);
         strokeWeight(0);
-        text("What cholesterol are you searching for? " + searched, 1150, 200);
+        fill(0);
+        text("What cholesterol are you searching for within the people with heart disease? " + searched, 1000, 200);
         if (animationMode){
             animation();
         } else{
@@ -50,7 +50,7 @@ public class DataVisualizationApp extends PApplet {
 
     public void keyPressed(){
         if (key == 'e'){ //search
-            foundAt = dataset.find(Integer.parseInt(searched));
+            foundAt = dataset.find(Integer.parseInt(searched), foundAt+1);
         } else if (key == 'o'){ //sort
             dataset.sort();
         } else if (key == '1' || key == '2' || key == '3' || key == '4' || key == '5' || key == '6' || key == '7' || key == '8' || key == '9' || key == '0'){
@@ -70,8 +70,6 @@ public class DataVisualizationApp extends PApplet {
 
     private void displayRecords(){ //displays all records
         Record[] records = dataset.getRecords();
-       //boolean labelDrawn = false;
-
         for (int i=0; i<records.length; i++){
             // people with heart disease's data visualization
             int chol = records[i].getChol();
@@ -87,7 +85,7 @@ public class DataVisualizationApp extends PApplet {
                 stroke(0);
             }
 
-            //exercise induced angina
+            //exercise induced angina - boldface
             if (records[i].getExang() == 1){
                 strokeWeight(3);
             }
@@ -95,33 +93,33 @@ public class DataVisualizationApp extends PApplet {
             // determines color & hue of heart
             if (records[i].getSex() == 1) { //male
                 if (records[i].getThal() == 0){
-                    fill(133, 235, 255, 0); //regular
+                    fill(133, 235, 255, 255); //regular
                 } else if (records[i].getThal() == 1){
-                    fill(133, 235, 255, 100);
+                    fill(133, 235, 255, 200);
                 } else if (records[i].getThal() == 2){
-                    fill(133, 235, 255, 175);
+                    fill(133, 235, 255, 130);
                 } else if (records[i].getThal() == 3){
-                    fill(133, 235, 255, 250);
+                    fill(133, 235, 255, 60);
                 }
             } else{ //female
                 if(records[i].getThal() == 0){
-                    fill(255, 153, 204,0);
+                    fill(255, 153, 204,255);
                 }else if (records[i].getThal() == 1){
-                    fill(255, 153, 204, 100);
+                    fill(255, 153, 204, 200);
                 } else if (records[i].getThal() == 2){
-                    fill(255, 153, 204, 175);
+                    fill(255, 153, 204, 130);
                 } else if (records[i].getThal() == 3){
-                    fill(255, 153, 204, 250);
+                    fill(255, 153, 204, 60);
                 }
+
             }
             int age = records[i].getAge();
             pushMatrix();
             translate(newX - 50, newY - 15);
-
             //start of drawing heart
             beginShape();
             if (records[i].getExang() == 1){
-                stroke(20);
+                strokeWeight(3);
             }
             vertex(50, 25);
             bezierVertex(50, -5, 90+age, 5, 50, 40+age);
@@ -133,31 +131,39 @@ public class DataVisualizationApp extends PApplet {
             popMatrix();
             strokeWeight(0);
             stroke(0);
-
-            // Here we put a name label on the plotted data when the mouse is over it
-            //if(dist(mouseX,mouseY,newX,newY)<10 && !labelDrawn){
-                //fill(255);
-              //  text(records[i].getNumber(),mouseX-10,mouseY-10);
-              //  labelDrawn = true; // only draw one label at a time
-            ///}
         }
 
         // regular people's data visualization
-        for (int i=records.length - 25; i<records.length; i++) {
-            if (i % 2 == 0) { //female
-                fill(255, 153, 204);
-                double regExang = (int) (Math.random()*100.0); //check for exang --------------------- QUESTION: why all bolded?
-                if (regExang<=6.7){
-                    strokeWeight(5);
+        NormalRecord[] normalRecords = dataset.getNormalRecords();
+        for (int i=0; i<normalRecords.length; i++) {
+            strokeWeight(normalRecords[i].getStrokeWeight());
+            int chol = normalRecords[i].getChol();
+            float newX = map(chol, minChol, maxChol, 0, width); // the map function takes our value and maps it to a value that fits on our canvas
+            int maxHeartRate = records[i].getMaxHeartRate();
+            float newY = map(maxHeartRate, minMHR, maxMHR, 0, height);
+            if (normalRecords[i].getSex() == 0){
+                if(normalRecords[i].getThal() == 0){
+                    fill(255, 153, 204,255); //opaque
+                } else if (normalRecords[i].getThal() == 1){
+                    fill(255, 153, 204, 200);
+                } else if (normalRecords[i].getThal() == 2){
+                    fill(255, 153, 204, 130);
+                } else if (normalRecords[i].getThal() == 3){
+                    fill(255, 153, 204, 60);
                 }
-            } else {
-                fill(133, 235, 255); //male
-                double regExang = (int) (Math.random()*100.0); //check for exang
-                if (regExang<=5.7){
-                    strokeWeight(5);
+            } else{
+                if (normalRecords[i].getThal() == 0){
+                    fill(133, 235, 255, 255);
+                } else if (normalRecords[i].getThal() == 1){
+                    fill(133, 235, 255, 200);
+                } else if (normalRecords[i].getThal() == 2){
+                    fill(133, 235, 255, 130);
+                } else if (normalRecords[i].getThal() == 3){
+                    fill(133, 235, 255, 60);
                 }
             }
-            ellipse(records[i].getChol(), records[i].getMaxHeartRate(), records[i].getAge(), records[i].getAge());
+            text(normalRecords[i].getChol(),newX-30,newY-30);
+            ellipse(newX, newY, normalRecords[i].getAge(), normalRecords[i].getAge());
             strokeWeight(0);
             stroke(0);
         }
@@ -165,7 +171,6 @@ public class DataVisualizationApp extends PApplet {
 
     public void animation(){
         Record[] records = dataset.getRecords();
-
         if(counter > 0) {
             for (int i = 0; i < records.length; i++) {
                 if (records[i].getAge() > 35 && records[i].getAge() < 46) {
@@ -200,7 +205,6 @@ public class DataVisualizationApp extends PApplet {
         int chol = record.getChol();
         // the map function takes our value and maps it to a value that fits on our canvas
         float newX = map(chol, minChol, maxChol, 0, width);
-
         int maxHeartRate = record.getMaxHeartRate();
         float newY = map(maxHeartRate, minMHR, maxMHR, 0, height);
 
@@ -208,19 +212,23 @@ public class DataVisualizationApp extends PApplet {
         // determines color & hue of heart
         if (record.getSex() == 1) { //male
             if (record.getThal() == 0){
-                fill(133, 235, 255, 0); //regular
+                fill(133, 235, 255, 255); //regular
             } else if (record.getThal() == 1){
-                fill(133, 235, 255, 100);
-            } else if (record.getThal() == 2){
                 fill(133, 235, 255, 200);
+            } else if (record.getThal() == 2){
+                fill(133, 235, 255, 130);
+            } else if (record.getThal() == 3){
+                fill(133, 235, 255, 60);
             }
         } else{ //female
             if(record.getThal() == 0){
-                fill(255, 153, 204,0);
+                fill(255, 153, 204,255);
             }else if (record.getThal() == 1){
-                fill(255, 153, 204, 100);
-            } else if (record.getThal() == 2){
                 fill(255, 153, 204, 200);
+            } else if (record.getThal() == 2){
+                fill(255, 153, 204, 130);
+            } else if (record.getThal() == 3){
+                fill(255, 153, 204, 60);
             }
         }
         int age = record.getAge();
@@ -229,14 +237,12 @@ public class DataVisualizationApp extends PApplet {
         //draws heart
         beginShape();
         if (record.getExang() == 1){
-            stroke(20);
+            strokeWeight(3);
         }
         vertex(50, 25);
         bezierVertex(50, -5, 90+age, 5, 50, 40+age);
-        // original: bezierVertex(50, -5, 90, 5, 50, 40);
         vertex(50, 25);
         bezierVertex(50, -5, 10-age, 5, 50, 40+age);
-        // original: bezierVertex(50, -5, 10, 5, 50, 40);
         endShape();
         //end of drawing heart
         popMatrix();

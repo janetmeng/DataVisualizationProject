@@ -3,8 +3,8 @@ public class SearchingMethods {
     public SearchingMethods(){
     }
 
-    public static int search(Record[] records, int cholesterol){
-        return SearchingMethods.linearSearch(records, cholesterol, 0);
+    public static int search(Record[] records, int cholesterol, int startingPoint){
+        return SearchingMethods.linearSearch(records, cholesterol, startingPoint);
         //return SearchingMethods.binarySearch(records, 0, records.length-1, cholesterol);
     }
 
